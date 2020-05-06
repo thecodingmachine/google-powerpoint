@@ -1,0 +1,40 @@
+{
+  "name": "thecodingmachine/googlePowerpoints",
+  "description": "A library to easily create powerpoints from template files using the google api",
+  "keywords": [
+    "googleAPI",
+    "powerpoint",
+    "templates"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Arthmaël Poly",
+      "email": "a.poly@thecodingmachine.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "google/apiclient": "^2.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.4.4 || ^8.0.0",
+    "phpstan/phpstan": "^0.11.5"
+  },
+  "autoload" : {
+    "psr-4" : {
+      "TheCodingMachine\\GooglePowerpoint\\" : "src/"
+    }
+  },
+  "autoload-dev" : {
+    "psr-4" : {
+      "TheCodingMachine\\GooglePowerpoint\\" : "tests/"
+    }
+  },
+  "scripts": {
+    "phpstan": "php vendor/bin/phpstan analyse"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
