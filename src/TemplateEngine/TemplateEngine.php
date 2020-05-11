@@ -1,19 +1,22 @@
 <?php
 
 
-namespace TheCodingMachine\GooglePowerpoint\Powerpoint;
+namespace TheCodingMachine\GooglePowerpoint\TemplateEngine;
 
 class TemplateEngine
 {
-    const MAX_ROWS_BY_REQUEST = 20;
+    private const MAX_ROWS_BY_REQUEST = 20;
     /** @var ImageUrlGenerator  */
-    private $imageUrlGenerator;
+    /*private $imageUrlGenerator;
 
     public function __construct(ImageUrlGenerator $imageUrlGenerator)
     {
         $this->imageUrlGenerator = $imageUrlGenerator;
-    }
+    }*/
 
+    /**
+     * @return mixed[]
+     */
     public function createTextRequest(InjectableVariableInterface $variable): array
     {
         return [
@@ -27,21 +30,27 @@ class TemplateEngine
         ];
     }
 
+    /**
+     * @return mixed[]
+     */
     public function createImageRequest(InjectableVariableInterface $variable): array
     {
         return [
             'replaceAllShapesWithImage' => [
-                'imageUrl' => $this->imageUrlGenerator->getUrlForImage($variable),
+                //'imageUrl' => $this->imageUrlGenerator->getUrlForImage($variable),
+                'imageUrl' => "todo",
                 'replaceMethod' => 'CENTER_CROP',
                 'containsText' => [
                     'text' => '{'.$variable->getVariableName().'}',
                     'matchCase' => true
                 ]
             ]
-
         ];
     }
 
+    /**
+     * @return mixed[]
+     */
     public function createArrayRequest(InjectableVariableInterface $variable, string $tableObjectId): array
     {
         $requests = [];

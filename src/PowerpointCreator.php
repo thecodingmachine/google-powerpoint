@@ -1,19 +1,24 @@
 <?php
 
 
-namespace App\Powerpoint;
+namespace TheCodingMachine\GooglePowerpoint;
 
-use App\Beans\PowerpointVariable;
-use App\Exceptions\PowerpointException;
-use App\GoogleAPI\GoogleFileManager;
-use App\GoogleAPI\GoogleSlideTemporaryFile;
-use App\GoogleAPI\GoogleTemplateFileInterface;
-use Google_Service_Slides_BatchUpdatePresentationRequest;
+use TheCodingMachine\GooglePowerpoint\Exceptions\PowerpointException;
+use TheCodingMachine\GooglePowerpoint\GoogleAPI\GoogleFileManager;
+use TheCodingMachine\GooglePowerpoint\GoogleAPI\GoogleSlideTemporaryFile;
+use TheCodingMachine\GooglePowerpoint\TemplateEngine\InjectableVariableInterface;
+use TheCodingMachine\GooglePowerpoint\TemplateEngine\TemplateEngine;
 
 final class PowerpointCreator
 {
-    private TemplateEngine $templateEngine;
-    private GoogleFileManager $googleFileManager;
+    /**
+     * @var TemplateEngine 
+     */
+    private $templateEngine;
+    /**
+     * @var GoogleFileManager 
+     */
+    private $googleFileManager;
 
     public function __construct(TemplateEngine $templateEngine, GoogleFileManager $googleFileManager)
     {
@@ -25,9 +30,9 @@ final class PowerpointCreator
      * @param InjectableVariableInterface[] $variableList the list of variable to inject
      * @return string the binary data of the generated file
      */
-    public function create(iterable $variableList, GoogleTemplateFileInterface $templateFile):string
+    public function create(iterable $variableList, string $templateFileName): string
     {
-        $slideTemporaryFile = $this->googleFileManager->copyTemplate($templateFile);
+        $slideTemporaryFile = $this->googleFileManager->copyTemplate($templateFileName);
         try {
             $this->editPowerpoint($variableList, $slideTemporaryFile);
             $data = $this->googleFileManager->downloadTempFileData($slideTemporaryFile);
@@ -42,14 +47,14 @@ final class PowerpointCreator
     /**
      * @return void
      */
-    public function signDocument(GoogleSlideTemporaryFile $temporaryFile, string $imageName)
+    /*public function signDocument(GoogleSlideTemporaryFile $temporaryFile, string $imageName)
     {
         $variables = [];
         $image = new PowerpointVariable('signatureImage', 'signatureImage', $imageName);
         $image->setType(2);
         $variables[] = $image;
         $this->editPowerpoint($variables, $temporaryFile);
-    }
+    }*/
 
     /**
      * @param InjectableVariableInterface[] $variableList
@@ -68,11 +73,7 @@ final class PowerpointCreator
                     break;
                 case InjectableVariableInterface::TYPE_ARRAY:
                     $tableObjectId = $this->googleFileManager->getTableObjectId($slideTemporaryFile, $variable->getVariableName());
-                    $requests = [...$requests, ...$this->templateEngine->createArrayRequest($variable, $tableObjectId)];
-                    break;
-                case InjectableVariableInterface::TYPE_REQUEST:
-                    $tableObjectId = $this->googleFileManager->getTableObjectId($slideTemporaryFile, $variable->getVariableName());
-                    $requests[] = $this->templateEngine->createOriginalRequest($variable, $tableObjectId);
+                    $requests = array_merge($requests, $this->templateEngine->createArrayRequest($variable, $tableObjectId));
                     break;
                 default:
                     throw new PowerpointException('Unknown variable type: '.$variable->getType());

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TheCodingMachine\GooglePowerpoint\Powerpoint;
+namespace TheCodingMachine\GooglePowerpoint\TemplateEngine;
 
 class ImageUrlGenerator
 {

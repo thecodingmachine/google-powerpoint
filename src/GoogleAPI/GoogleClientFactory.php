@@ -9,8 +9,6 @@ use Google_Service_Slides;
 
 class GoogleClientFactory
 {
-    /** @var Google_Client */
-    private $client;
     /** @var Google_Service_Slides */
     private $slideService;
     /** @var Google_Service_Drive */
@@ -24,11 +22,9 @@ class GoogleClientFactory
         $client->setScopes([Google_Service_Slides::PRESENTATIONS, Google_Service_Drive::DRIVE_FILE]);
         $client->setAccessType('offline');
         $client->setPrompt('none');
-
-        $this->client = $client;
         
-        $this->slideService = new Google_Service_Slides($this->client);
-        $this->driveService = new Google_Service_Drive($this->client);
+        $this->slideService = new Google_Service_Slides($client);
+        $this->driveService = new Google_Service_Drive($client);
     }
     
     public function getSlideService(): Google_Service_Slides

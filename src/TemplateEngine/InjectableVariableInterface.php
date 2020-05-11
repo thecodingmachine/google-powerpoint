@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TheCodingMachine\GooglePowerpoint\Powerpoint;
+namespace TheCodingMachine\GooglePowerpoint\TemplateEngine;
 
 //represent a variable to create during the powerpoint generation. Can represent a text value, picture filepath, or a list of row to insert in a table.
 interface InjectableVariableInterface
