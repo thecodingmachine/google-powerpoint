@@ -12,11 +12,11 @@ use TheCodingMachine\GooglePowerpoint\TemplateEngine\TemplateEngine;
 final class PowerpointCreator
 {
     /**
-     * @var TemplateEngine 
+     * @var TemplateEngine
      */
     private $templateEngine;
     /**
-     * @var GoogleFileManager 
+     * @var GoogleFileManager
      */
     private $googleFileManager;
 
