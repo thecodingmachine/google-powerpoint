@@ -6,16 +6,30 @@ use PHPUnit\Framework\TestCase;
 use TheCodingMachine\GooglePowerpoint\TemplateEngine\InjectableVariableInterface;
 use TheCodingMachine\GooglePowerpoint\TemplateEngine\TemplateEngine;
 use TheCodingMachine\GooglePowerpoint\Tests\dummy\DummyVariable;
+use TheCodingMachine\GooglePowerpoint\Tests\dummy\ImageUrlGenerator;
 
 class TemplateEngineTest extends TestCase
 {
+    /**
+     * @var TemplateEngine
+     */
+    private $engine;
+    /**
+     * @var ImageUrlGenerator
+     */
+    private $imageUrlStartegy;
+
+    protected function setup(): void
+    {
+        $this->imageUrlStartegy = new ImageUrlGenerator();
+        $this->engine = new TemplateEngine($this->imageUrlStartegy);
+    }
+    
     public function testInsertTextRequest(): void
     {
         $v = new DummyVariable('testName', 'hello', InjectableVariableInterface::TYPE_TEXT);
         
-        $engine = new TemplateEngine();
-        
-        $request = $engine->createTextRequest($v);
+        $request = $this->engine->createTextRequest($v);
         $expected = [
             'replaceAllText' => [
                 'containsText' => [
@@ -31,13 +45,11 @@ class TemplateEngineTest extends TestCase
     public function testInsertImageRequest(): void
     {
         $v = new DummyVariable('testName', 'hello.png', InjectableVariableInterface::TYPE_PICTURE);
-
-        $engine = new TemplateEngine();
-
-        $request = $engine->createImageRequest($v);
+        
+        $request = $this->engine->createImageRequest($v);
         $expected = [
             'replaceAllShapesWithImage' => [
-                'imageUrl' => "todo", //todo: implement variable image url depending on environment
+                'imageUrl' => $this->imageUrlStartegy->getUrlForImage($v),
                 'replaceMethod' => 'CENTER_CROP',
                 'containsText' => [
                     'text' => '{testName}',
@@ -52,12 +64,11 @@ class TemplateEngineTest extends TestCase
     public function testInsertArrayRequest(): void
     {
         $value = [['a', 1], [1, 2]];
-        $encoded = json_encode($value) ?? '';
+        /** @var string $encoded */
+        $encoded = json_encode($value);
         $v = new DummyVariable('testName', $encoded, InjectableVariableInterface::TYPE_ARRAY);
 
-        $engine = new TemplateEngine();
-
-        $request = $engine->createArrayRequest($v, 'dummyId');
+        $request = $this->engine->createArrayRequest($v, 'dummyId');
         $this->assertCount(5, $request);
         $insertTableRowsRequest = [
             'insertTableRows' => [

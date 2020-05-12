@@ -37,7 +37,7 @@ class GoogleFileManager
         }
         //upload template file to ggogle drive and get its id.
         $fileMetadata = new Google_Service_Drive_DriveFile(['name' => $name, 'mimeType' => self::GOOGLE_DRIVE_PRESENTATION_FORMAT]);
-        $fileMetadata->setParents(['1gxG5S7nO34EnH20tCxPgihi4HBcgC9Dh']); //todo remove this line in the final version
+        //$fileMetadata->setParents(['1gxG5S7nO34EnH20tCxPgihi4HBcgC9Dh']); //todo remove this line in the final version
         $this->googleDriveService->files->create($fileMetadata, [
             'data' => $content,
             'mimeType' => self::MICROSOFT_PRESENTATION_FORMAT,

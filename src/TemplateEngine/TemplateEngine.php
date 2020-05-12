@@ -3,16 +3,19 @@
 
 namespace TheCodingMachine\GooglePowerpoint\TemplateEngine;
 
+//todo: break this class into sub classes for every type of variables
 class TemplateEngine
 {
     private const MAX_ROWS_BY_REQUEST = 20;
-    /** @var ImageUrlGenerator  */
-    /*private $imageUrlGenerator;
+    /**
+     * @var ImageUrlStrategy
+     */
+    private $imageUrlGenerator;
 
-    public function __construct(ImageUrlGenerator $imageUrlGenerator)
+    public function __construct(ImageUrlStrategy $imageUrlGenerator)
     {
         $this->imageUrlGenerator = $imageUrlGenerator;
-    }*/
+    }
 
     /**
      * @return mixed[]
@@ -37,8 +40,7 @@ class TemplateEngine
     {
         return [
             'replaceAllShapesWithImage' => [
-                //'imageUrl' => $this->imageUrlGenerator->getUrlForImage($variable),
-                'imageUrl' => "todo",
+                'imageUrl' => $this->imageUrlGenerator->getUrlForImage($variable),
                 'replaceMethod' => 'CENTER_CROP',
                 'containsText' => [
                     'text' => '{'.$variable->getVariableName().'}',
